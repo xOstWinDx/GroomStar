@@ -21,4 +21,4 @@ class Appointment(Base):
     )
 
     def __repr__(self):
-        return f"Запись #{self.id} Работник: {self.employee_id}, Клиент: {self.id}. детали: {self.details}"
+        return f"Запись #{self.id} Работник: #{self.employee_id}, Клиент: #{self.id}. детали: {self.details}"

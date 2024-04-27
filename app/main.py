@@ -81,13 +81,15 @@ async def fake_db_data():
 
         servtopet1 = ServicesToPets(
             service_id=1,
-            pet_id=1,
             appointment_detail_id=1,
         )
         servtopet2 = ServicesToPets(
             service_id=2,
-            pet_id=2,
             appointment_detail_id=2,
+        )
+        servtopet3 = ServicesToPets(
+            service_id=2,
+            appointment_detail_id=1,
         )
 
         session.add(cus1)
@@ -121,6 +123,9 @@ async def fake_db_data():
         await session.commit()
 
         session.add(servtopet2)
+        await session.commit()
+
+        session.add(servtopet3)
         await session.commit()
 
         my = await session.execute(

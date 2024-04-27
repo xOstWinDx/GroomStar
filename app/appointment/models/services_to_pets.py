@@ -10,13 +10,11 @@ class ServicesToPets(Base):
         UniqueConstraint(
             "service_id",
             "appointment_detail_id",
-            "pet_id",
             name="idx_unique_service_id_detail_id",
         ),
     )
     id: Mapped[int] = mapped_column(primary_key=True)
     service_id: Mapped[int] = mapped_column(ForeignKey("services.id"), nullable=False)
-    pet_id: Mapped[int] = mapped_column(ForeignKey("pets.id"))
     appointment_detail_id: Mapped[int] = mapped_column(
         ForeignKey("appointments_detail.id"), nullable=False
     )
