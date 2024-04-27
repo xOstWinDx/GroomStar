@@ -18,9 +18,5 @@ class Pet(Base):
     species: Mapped[str] = mapped_column(nullable=False)
     breed: Mapped[str] = mapped_column(nullable=False)
 
-    appointments: Mapped[list["Appointment"]] = relationship(
-        back_populates="pets", secondary="appointments_detail", lazy="selectin"
-    )
-
     def __repr__(self):
         return f"#{self.id} вид: {self.species} Имя: {self.name}"

@@ -1,6 +1,9 @@
 import asyncio
 import datetime
 
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
 from app.database import get_async_session
 from app.customers.models import Customer
 from app.pets.models import Pet
@@ -9,8 +12,6 @@ from app.services.models import Service
 from app.appointment.models.appointment import Appointment
 from app.appointment.models.appointment_detail import AppointmentDetail
 from app.appointment.models.services_to_pets import ServicesToPets
-from sqlalchemy.orm import selectinload
-from sqlalchemy import insert, select
 
 from app.database import engine, Base
 
@@ -81,12 +82,12 @@ async def fake_db_data():
         servtopet1 = ServicesToPets(
             service_id=1,
             pet_id=1,
-            appointment_id=1,
+            appointment_detail_id=1,
         )
         servtopet2 = ServicesToPets(
-            service_id=1,
+            service_id=2,
             pet_id=2,
-            appointment_id=1,
+            appointment_detail_id=2,
         )
 
         session.add(cus1)
@@ -122,7 +123,12 @@ async def fake_db_data():
         session.add(servtopet2)
         await session.commit()
 
-        my = await session.get(Appointment, 1)
+        my = await session.execute(
+            select(Appointment)
+            .filter_by(id=1)
+            .options(selectinload(Appointment.details))
+        )
+        my = my.scalar()
         print(my)
 
 

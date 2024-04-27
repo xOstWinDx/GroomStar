@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import UniqueConstraint
 
 
 from app.database import Base
@@ -22,10 +21,12 @@ class AppointmentDetail(Base):
     pet_id: Mapped[int] = mapped_column(ForeignKey("pets.id"), nullable=False)
 
     services: Mapped[list["Service"]] = relationship(
-        back_populates="appointment_detail", secondary="services_to_pets"
+        secondary="services_to_pets", lazy="selectin"
     )
 
-    appointment: Mapped["Appointment"] = relationship(back_populates="details")
+    appointment: Mapped["Appointment"] = relationship(
+        back_populates="details", lazy="selectin"
+    )
 
     def __repr__(self):
         return f"Животное #{self.pet_id} Услуги: {self.services}"

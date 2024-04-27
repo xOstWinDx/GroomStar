@@ -1,6 +1,6 @@
 import datetime
-from typing import TYPE_CHECKING
-from sqlalchemy import func, DateTime, ForeignKey
+
+from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -17,7 +17,7 @@ class Appointment(Base):
     )
 
     details: Mapped[list["AppointmentDetail"]] = relationship(
-        back_populates="appointment"
+        back_populates="appointment", lazy="selectin"
     )
 
     def __repr__(self):
