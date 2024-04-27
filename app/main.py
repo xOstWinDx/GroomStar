@@ -8,7 +8,7 @@ from app.employees.models import Employee
 from app.services.models import Service
 from app.appointment.models.appointment import Appointment
 from app.appointment.models.appointment_detail import AppointmentDetail
-from app.appointment.models.services_to_appointment import ServicesToAppointment
+from app.appointment.models.services_to_pets import ServicesToPets
 from sqlalchemy.orm import selectinload
 from sqlalchemy import insert, select
 
@@ -63,56 +63,67 @@ async def fake_db_data():
             price_big=3000,
         )
 
-        apo1 = Appointment(employee_id=1, customer_id=1, date=datetime.datetime.now())
+        appoint1 = Appointment(
+            employee_id=1,
+            customer_id=1,
+            date=datetime.datetime.now(),
+        )
 
-        apodet1 = AppointmentDetail(
+        appdetail1 = AppointmentDetail(
             appointment_id=1,
             pet_id=1,
         )
-        apodet2 = AppointmentDetail(
+        appdetail2 = AppointmentDetail(
             appointment_id=1,
             pet_id=2,
         )
 
-        aposertodet1 = ServicesToAppointment(
+        servtopet1 = ServicesToPets(
             service_id=1,
+            pet_id=1,
             appointment_id=1,
         )
-
-        aposertodet2 = ServicesToAppointment(
-            service_id=2,
+        servtopet2 = ServicesToPets(
+            service_id=1,
+            pet_id=2,
             appointment_id=1,
         )
 
         session.add(cus1)
         await session.commit()
+
         session.add(pet1)
         await session.commit()
+
         session.add(pet2)
         await session.commit()
+
         session.add(eml1)
         await session.commit()
+
         session.add(serv1)
         await session.commit()
+
         session.add(serv2)
         await session.commit()
-        session.add(apo1)
-        await session.commit()
-        session.add(apodet1)
-        await session.commit()
-        session.add(apodet2)
-        await session.commit()
-        session.add(aposertodet1)
-        await session.commit()
-        session.add(aposertodet2)
+
+        session.add(appoint1)
         await session.commit()
 
+        session.add(appdetail1)
+        await session.commit()
 
-async def get_fake():
-    async with get_async_session() as session:
-        my = await session.get(Appointment, 1, options=[selectinload(Appointment.pets)])
+        session.add(appdetail2)
+        await session.commit()
+
+        session.add(servtopet1)
+        await session.commit()
+
+        session.add(servtopet2)
+        await session.commit()
+
+        my = await session.get(Appointment, 1)
         print(my)
 
 
-# asyncio.run(fake_db_data())
-asyncio.run(get_fake())
+asyncio.run(fake_db_data())

@@ -6,10 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.appointment.models.appointment_detail import AppointmentDetail
 
-if TYPE_CHECKING:
-    from app.pets.models import Pet
-    from app.services.models import Service
-
 
 class Appointment(Base):
     __tablename__ = "appointments"
@@ -20,17 +16,9 @@ class Appointment(Base):
         DateTime(timezone=False), nullable=False
     )
 
-    pets: Mapped[list["Pet"]] = relationship(
-        back_populates="appointments",
-        secondary="appointments_detail",
-        lazy="selectin",
-    )
-
-    services: Mapped[list["Service"]] = relationship(
-        back_populates="appointment",
-        secondary="services_to_appointment",
-        lazy="selectin",
+    details: Mapped[list["AppointmentDetail"]] = relationship(
+        back_populates="appointment"
     )
 
     def __repr__(self):
-        return f"Запись #{self.id} Работник: {self.employee_id}, Клиент: {self.id}. Животные: {self.pets} Услуги: {self.services}"
+        return f"Запись #{self.id} Работник: {self.employee_id}, Клиент: {self.id}. детали: {self.details}"

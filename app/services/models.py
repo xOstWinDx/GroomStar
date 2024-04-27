@@ -16,10 +16,5 @@ class Service(Base):
     price_small: Mapped[int] = mapped_column(nullable=False)
     price_big: Mapped[int] = mapped_column(nullable=False)
 
-    appointment: Mapped[list["Appointment"]] = relationship(
-        back_populates="services",
-        secondary="services_to_appointment",
-    )
-
     def __repr__(self):
         return f"#{self.id} {self.title}"
