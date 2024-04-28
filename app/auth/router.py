@@ -15,7 +15,7 @@ from app.users.schemas import SUserReg, SUserLogin
 router = APIRouter(tags=["Auth"], prefix="/auth")
 
 
-@router.post("/register")
+@router.post("/register", status_code=201)
 async def register_user(user_data=Depends(validate_user_data)):
     user_dict = user_data.as_dict()
     user_dict["hashed_password"] = hash_password(user_dict["hashed_password"])
@@ -23,10 +23,9 @@ async def register_user(user_data=Depends(validate_user_data)):
 
     if user is None:
         raise HTTPException(status_code=400, detail="Incorrect Data")
-    return user
 
 
-@router.post("/login")
+@router.post("/login", status_code=200)
 async def login_user(response: Response, user_data: SUserLogin = Depends()):
     user: User = await auth_user(user_data)
     response.set_cookie(
@@ -36,4 +35,8 @@ async def login_user(response: Response, user_data: SUserLogin = Depends()):
         secure=True,
         httponly=True,
     )
-    return user
+
+
+@router.post("/logout", status_code=200)
+async def logout_user(response: Response):
+    response.delete_cookie("token")
