@@ -1,13 +1,7 @@
-from typing import TYPE_CHECKING
-
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.orm import mapped_column, Mapped
 
 from app.database import Base
-from app.customers.models import Customer
-
-if TYPE_CHECKING:
-    from app.appointment.models.appointment import Appointment
 
 
 class Pet(Base):
