@@ -1,28 +1,30 @@
 from dataclasses import dataclass
 
 from fastapi import Form
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from pydantic_core import PydanticCustomError
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
 
-@dataclass
-class SUserGet:
+class SUserGet(BaseModel):
     phone: PhoneNumber = Form()
     email: EmailStr = Form()
-    name: str = Form()
+    full_name: str = Form()
+    model_config = ConfigDict(from_attributes=True)
 
 
 @dataclass
-class SUserReg(SUserGet):
-
+class SUserReg:
+    phone: PhoneNumber = Form()
+    email: EmailStr = Form()
+    full_name: str = Form()
     password: str = Form()
 
     def as_dict(self):
         return {
             "phone": self.phone,
             "email": self.email,
-            "full_name": self.name,
+            "full_name": self.full_name,
             "hashed_password": self.password,
         }
 

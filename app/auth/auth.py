@@ -1,57 +1,102 @@
+import uuid
 from datetime import datetime, timedelta
 
+import bcrypt
 import jwt
 from fastapi import HTTPException, Depends
+from starlette.responses import Response
 
+from app.auth.dao import JwtDAO
 from app.config import settings
+from app.exceptions import (
+    UserAlreadyExistException,
+    BaseAuthException,
+    IncorrectPasswordOrLoginException,
+)
 from app.users.dao import UserDAO
 from app.users.models import User
 from app.users.schemas import SUserReg, SUserLogin
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 async def validate_user_data(user_data: SUserReg = Depends()):
     user = await UserDAO.fetch_one_or_none(phone=user_data.phone)
     if user is not None:
-        raise HTTPException(
-            status_code=400, detail="Пользователь с таким телефоном уже существует"
-        )
+        raise UserAlreadyExistException()
     user = await UserDAO.fetch_one_or_none(email=user_data.email)
     if user is not None:
-        raise HTTPException(
-            status_code=400, detail="Пользователь с таким Email уже существует"
-        )
+        raise UserAlreadyExistException()
+    user_data.email = user_data.email.lower()
     return user_data
 
 
-def hash_password(password: str) -> str:
-    print(password)
-    return pwd_context.hash(password)
+def hash_password(password: str) -> bytes:
+    salt = bcrypt.gensalt()
+    pwd_bytes = password.encode()
+    return bcrypt.hashpw(pwd_bytes, salt)
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+async def set_pair_token(
+    user_agent, ip_address, user_id, response: Response
+) -> tuple[str, str]:
+    try:
+        access_token = await create_token(user_agent, ip_address, user_id, "access")
+        refresh_token = await create_token(user_agent, ip_address, user_id, "refresh")
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            max_age=900,
+            secure=True,
+            httponly=True,
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            max_age=604_800,
+            secure=True,
+            httponly=True,
+        )
+        return access_token, refresh_token
+
+    except Exception as e:
+        print(e.args)
+        raise BaseAuthException()
 
 
-def create_access_token(user: User):
-    payload = {"sub": user.id, "exp": datetime.now() + timedelta(minutes=15)}
-    token = jwt.encode(payload, settings.SECRET_KEY, settings.ALGORITHM)
+def verify_password(plain_password: bytes, hashed_password: bytes) -> bool:
+    return bcrypt.checkpw(plain_password, hashed_password)
+
+
+async def create_token(user_agent, ip_address, user_id: int, token_type: str) -> str:
+    if token_type == "refresh":
+        exp = datetime.now() + timedelta(days=7)
+        payload = {"sub": user_id, "exp": exp, "jti": str(uuid.uuid4())}
+        await JwtDAO.add(
+            id=payload["jti"],
+            is_active=True,
+            user_id=payload["sub"],
+            ip_address=ip_address,
+            user_agent=user_agent,
+        )
+    else:
+        exp = datetime.now() + timedelta(minutes=10)
+        payload = {"sub": user_id, "exp": exp}
+
+    token = jwt.encode(
+        payload, settings.auth_jwt.private_key_path.read_text(), settings.ALGORITHM
+    )
     return token
 
 
 async def auth_user(user_data: SUserLogin):
+    user_data.login = user_data.login.lower()
     user_dict = user_data.as_dict()
-    password = user_dict.pop("hashed_password")
+    password = user_dict.pop("hashed_password").encode()
     user: User = await UserDAO.fetch_one_or_none(**user_dict)
     if user is None:
-        raise HTTPException(status_code=400, detail="Не верный Email или Пароль")
-
+        raise IncorrectPasswordOrLoginException()
     if verify_password(
         password,
         user.hashed_password,
     ):
         return user
-
-    raise HTTPException(status_code=400, detail="Не верный Email или Пароль")
+    raise IncorrectPasswordOrLoginException()

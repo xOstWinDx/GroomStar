@@ -5,8 +5,8 @@ from starlette.responses import Response
 from app.auth.auth import (
     validate_user_data,
     auth_user,
-    create_access_token,
     hash_password,
+    set_pair_token,
 )
 from app.users.dao import UserDAO
 from app.users.models import User
@@ -26,17 +26,18 @@ async def register_user(user_data=Depends(validate_user_data)):
 
 
 @router.post("/login", status_code=200)
-async def login_user(response: Response, user_data: SUserLogin = Depends()):
+async def login_user(
+    request: Request, response: Response, user_data: SUserLogin = Depends()
+):
+    if request.cookies.get("refresh_token"):
+        raise HTTPException(status_code=400, detail="Вы уже аутентифицированы")
     user: User = await auth_user(user_data)
-    response.set_cookie(
-        key="token",
-        value=create_access_token(user),
-        max_age=900,
-        secure=True,
-        httponly=True,
+    await set_pair_token(
+        request.headers.get("user-agent"), request.client.host, user.id, response
     )
 
 
 @router.post("/logout", status_code=200)
 async def logout_user(response: Response):
-    response.delete_cookie("token")
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")

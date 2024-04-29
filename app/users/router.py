@@ -8,5 +8,5 @@ router = APIRouter(tags=["Users"], prefix="/user")
 
 
 @router.get("/me", response_model=SUserGet)
-async def get_self(user: User = Depends(get_current_user)):
+async def get_self(user=Depends(get_current_user)):
     return user

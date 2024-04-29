@@ -11,7 +11,7 @@ class User(Base):
     phone: Mapped[str] = mapped_column(index=True, unique=True)
     email: Mapped[str] = mapped_column(index=True, unique=True)
     full_name: Mapped[str] = mapped_column(nullable=False)
-    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    hashed_password: Mapped[bytes] = mapped_column(nullable=False)
     is_admin: Mapped[bool] = mapped_column(
         default=False, server_default="false", nullable=False
     )
