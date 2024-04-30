@@ -24,7 +24,7 @@ class AppointmentDetail(Base):
     services: Mapped[list["Service"]] = relationship(
         secondary="services_to_pets", lazy="selectin"
     )
-    pet: Mapped["Pet"] = relationship()
+    pet: Mapped["Pet"] = relationship(lazy="selectin")
 
     appointment: Mapped["Appointment"] = relationship(
         back_populates="details", lazy="selectin"

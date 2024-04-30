@@ -1,10 +1,14 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.appointment.models.appointment_detail import AppointmentDetail
+
+if TYPE_CHECKING:
+    from app.users.models import User
 
 
 class Appointment(Base):
@@ -18,6 +22,11 @@ class Appointment(Base):
 
     details: Mapped[list["AppointmentDetail"]] = relationship(
         back_populates="appointment", lazy="selectin"
+    )
+
+    employee: Mapped["User"] = relationship(foreign_keys=employee_id)
+    customer: Mapped["User"] = relationship(
+        back_populates="appointment", foreign_keys=customer_id
     )
 
     def __repr__(self):

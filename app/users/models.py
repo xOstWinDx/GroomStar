@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import func, DateTime
+
+from app.appointment.models.appointment import Appointment
 from app.database import Base
 from app.pets.models import Pet
 
@@ -31,4 +33,7 @@ class User(Base):
         default=datetime.datetime.now(),
     )
 
-    pets: Mapped[list["Pet"]] = relationship(back_populates="user")
+    pets: Mapped[list["Pet"]] = relationship(back_populates="user", lazy="selectin")
+    appointment: Mapped[list["Appointment"]] = relationship(
+        back_populates="customer", foreign_keys=Appointment.customer_id
+    )
