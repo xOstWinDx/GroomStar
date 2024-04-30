@@ -13,7 +13,6 @@ from app.appointment.models.appointment import Appointment  # noqa
 from app.appointment.models.appointment_detail import AppointmentDetail  # noqa
 from app.appointment.models.services_to_pets import ServicesToPets  # noqa
 from app.services.models import Service  # noqa
-from app.employees.models import Employee  # noqa
 from app.auth.models import Jwt  # noqa
 from app.database import Base
 

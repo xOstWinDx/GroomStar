@@ -16,8 +16,8 @@ public_key = key.public_key().public_bytes(
     crypto_serialization.Encoding.OpenSSH, crypto_serialization.PublicFormat.OpenSSH
 )
 
-with open("public.pem", "wb") as file:
+with open("../public.pem", "wb") as file:
     file.write(public_key)
 
-with open("private.pem", "wb") as file:
+with open("../private.pem", "wb") as file:
     file.write(private_key)

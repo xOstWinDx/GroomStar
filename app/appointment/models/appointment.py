@@ -10,8 +10,8 @@ from app.appointment.models.appointment_detail import AppointmentDetail
 class Appointment(Base):
     __tablename__ = "appointments"
     id: Mapped[int] = mapped_column(primary_key=True)
-    employee_id: Mapped[int] = mapped_column(ForeignKey("employees.id"), index=True)
-    customer_id: Mapped[int] = mapped_column(ForeignKey("customers.id"), index=True)
+    employee_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     date: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=False), nullable=False
     )

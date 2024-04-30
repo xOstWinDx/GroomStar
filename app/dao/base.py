@@ -17,7 +17,7 @@ class BaseDAO:
     async def fetch_all(cls, **filter_by):
         async with get_async_session() as session:
             result = await session.execute(select(cls.model).filter_by(**filter_by))
-            result = result.scalars().all()
+            result = result.mappings().all()
         return result
 
     @classmethod
@@ -34,6 +34,16 @@ class BaseDAO:
     async def delete(cls, **filter_by) -> model:
         async with get_async_session() as session:
             result = await session.execute(delete(cls.model).filter_by(**filter_by))
+            result = result.rowcount
+            await session.commit()
+        return result
+
+    @classmethod
+    async def update(cls, item_id, **values) -> model:
+        async with get_async_session() as session:
+            result = await session.execute(
+                update(cls.model).values(**values).filter_by(id=item_id)
+            )
             result = result.rowcount
             await session.commit()
         return result

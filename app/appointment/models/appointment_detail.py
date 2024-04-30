@@ -10,6 +10,7 @@ from app.database import Base
 if TYPE_CHECKING:
     from app.appointment.models.appointment import Appointment
     from app.services.models import Service
+    from app.pets.models import Pet
 
 
 class AppointmentDetail(Base):
@@ -23,10 +24,11 @@ class AppointmentDetail(Base):
     services: Mapped[list["Service"]] = relationship(
         secondary="services_to_pets", lazy="selectin"
     )
+    pet: Mapped["Pet"] = relationship()
 
     appointment: Mapped["Appointment"] = relationship(
         back_populates="details", lazy="selectin"
     )
 
     def __repr__(self):
-        return f"Животное #{self.pet_id} Услуги: {self.services}"
+        return f"Животное #{self.pet} Услуги: {self.services}"
