@@ -10,7 +10,7 @@ from app.auth.dao import JwtDAO
 from app.config import settings
 from app.exceptions import (
     UserAlreadyExistException,
-    BaseAuthException,
+    BaseApiException,
     IncorrectPasswordOrLoginException,
 )
 from app.users.dao import UserDAO
@@ -19,13 +19,14 @@ from app.users.schemas import SUserReg, SUserLogin
 
 
 async def validate_user_data(user_data: SUserReg = Depends()):
+    user_data.email = user_data.email.lower()
     user = await UserDAO.fetch_one_or_none(phone=user_data.phone)
     if user is not None:
         raise UserAlreadyExistException()
     user = await UserDAO.fetch_one_or_none(email=user_data.email)
     if user is not None:
         raise UserAlreadyExistException()
-    user_data.email = user_data.email.lower()
+
     return user_data
 
 
@@ -59,7 +60,7 @@ async def set_pair_token(
 
     except Exception as e:
         print(e.args)
-        raise BaseAuthException()
+        raise BaseApiException()
 
 
 def verify_password(plain_password: bytes, hashed_password: bytes) -> bool:

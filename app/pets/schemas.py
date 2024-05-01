@@ -1,10 +1,11 @@
+from typing import Literal, Annotated
+
 from pydantic import BaseModel, Field
 
 
 class SPetAdd(BaseModel):
-
     name: str
-    species: str
+    species: Literal["Собака", "Кошка", "Другое"]
     breed: str
 
 

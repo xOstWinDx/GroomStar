@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 
 from app.auth.dependencies import get_current_user_admin
+from app.exceptions import IncorrectIDException
 from app.services.dao import ServicesDAO
 from app.services.schemas import SServicesAdd, SServicesGet
 
@@ -18,7 +19,7 @@ async def add_services(
 async def del_services(service_id: int, user=Depends(get_current_user_admin)):
     res = await ServicesDAO.delete(id=service_id)
     if not res:
-        raise HTTPException(status_code=400, detail="Неверные данные")
+        raise IncorrectIDException
 
 
 @router.get("/get")
@@ -38,4 +39,4 @@ async def update_services(
         service_id, **new_values.model_dump(exclude_none=True)
     )
     if not res:
-        raise HTTPException(status_code=400, detail="Неверные данные")
+        raise IncorrectIDException

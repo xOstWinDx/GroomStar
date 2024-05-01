@@ -47,3 +47,10 @@ class BaseDAO:
             result = result.rowcount
             await session.commit()
         return result
+
+    @classmethod
+    async def get_all_ids(cls):
+        async with get_async_session() as session:
+            res = await session.execute(select(cls.model.id))
+            res = res.scalars().all()
+            return res

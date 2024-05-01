@@ -15,6 +15,7 @@ class SUserGet(BaseModel):
 
 @dataclass
 class SUserReg:
+
     phone: PhoneNumber = Form()
     email: EmailStr = Form()
     full_name: str = Form()
@@ -22,10 +23,10 @@ class SUserReg:
 
     def as_dict(self):
         return {
-            "phone": self.phone,
-            "email": self.email,
-            "full_name": self.full_name,
-            "hashed_password": self.password,
+            "phone": self.phone.strip(),
+            "email": self.email.strip(),
+            "full_name": self.full_name.strip(),
+            "hashed_password": self.password.strip(),
         }
 
 

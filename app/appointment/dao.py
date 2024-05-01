@@ -1,4 +1,6 @@
-from sqlalchemy import insert
+import datetime
+
+from sqlalchemy import insert, select, func
 
 from app.appointment.models.appointment import Appointment
 from app.appointment.models.appointment_detail import AppointmentDetail
@@ -49,3 +51,14 @@ class AppointmentDAO(BaseDAO):
                         )
                     )
             await session.commit()
+
+    @classmethod
+    async def get_date_of_employees(cls, date: datetime.datetime, employee_id):
+        async with get_async_session() as session:
+            res = await session.execute(
+                select(cls.model.date)
+                .where(func.DATE(cls.model.date) == date.date())
+                .filter_by(employee_id=employee_id)
+            )
+            res = res.scalars().all()
+            return res

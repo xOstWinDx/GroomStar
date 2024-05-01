@@ -14,7 +14,10 @@ class ServicesToPets(Base):
         ),
     )
     id: Mapped[int] = mapped_column(primary_key=True)
-    service_id: Mapped[int] = mapped_column(ForeignKey("services.id"), nullable=False)
+    service_id: Mapped[int] = mapped_column(
+        ForeignKey("services.id", ondelete="CASCADE"), nullable=False
+    )
     appointment_detail_id: Mapped[int] = mapped_column(
-        ForeignKey("appointments_detail.id"), nullable=False
+        ForeignKey("appointments_detail.id", ondelete="CASCADE"),
+        nullable=False,
     )

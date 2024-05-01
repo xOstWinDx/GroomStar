@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 
 from app.auth.dependencies import get_current_user
+from app.exceptions import IncorrectIDException
 from app.pets.dao import PetDAO
 from app.pets.schemas import SPetAdd, SPetGet
 from app.users.models import User
@@ -26,4 +27,4 @@ async def get_pet(user: User = Depends(get_current_user)) -> list[dict[str, SPet
 async def remove_pet(pet_id: int, user: User = Depends(get_current_user)):
     result = await PetDAO.delete(id=pet_id, user_id=user.id)
     if not result:
-        raise HTTPException(status_code=400, detail="Не верные данные")
+        raise IncorrectIDException

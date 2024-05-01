@@ -34,6 +34,9 @@ class User(Base):
     )
 
     pets: Mapped[list["Pet"]] = relationship(back_populates="user", lazy="selectin")
-    appointment: Mapped[list["Appointment"]] = relationship(
+    appointments: Mapped[list["Appointment"]] = relationship(
         back_populates="customer", foreign_keys=Appointment.customer_id
     )
+
+    def __repr__(self):
+        return f"#{self.id} {self.full_name} {self.phone} {self.email}"

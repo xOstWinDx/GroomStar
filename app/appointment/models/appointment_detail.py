@@ -31,4 +31,4 @@ class AppointmentDetail(Base):
     )
 
     def __repr__(self):
-        return f"Животное #{self.pet} Услуги: {self.services}"
+        return f"Животное {self.pet} Услуги: {self.services}"

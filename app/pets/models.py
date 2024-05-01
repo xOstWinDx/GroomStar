@@ -21,4 +21,4 @@ class Pet(Base):
     user: Mapped["User"] = relationship(back_populates="pets")
 
     def __repr__(self):
-        return f"#{self.id} вид: {self.species} Имя: {self.name}"
+        return f"#{self.id} {self.species} Кличка: {self.name}"

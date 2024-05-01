@@ -20,7 +20,6 @@ async def register_user(user_data=Depends(validate_user_data)):
     user_dict = user_data.as_dict()
     user_dict["hashed_password"] = hash_password(user_dict["hashed_password"])
     user: User = await UserDAO.add(**user_dict)
-
     if user is None:
         raise HTTPException(status_code=400, detail="Incorrect Data")
 
