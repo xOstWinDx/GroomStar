@@ -7,7 +7,8 @@
 
 ## Технологические решения
   - Регистрация
-  - RS256 refresh access token
+  - refresh и access Токены
+  - Private и Public key
   - Авторизация
   - Админ панель
   - Сбор метрик Prometheus, визуализирование в Grafana
