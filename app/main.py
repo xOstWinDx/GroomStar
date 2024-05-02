@@ -5,7 +5,7 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 from sqladmin import Admin
-
+from starlette.staticfiles import StaticFiles
 
 from app.admin.auth import AdminAuth
 from app.admin.views import UserAdmin, AppointmentAdmin, PetAdmin, EmployeeAdmin
@@ -17,6 +17,8 @@ from app.pets.router import router as pet_router
 from app.services.router import router as service_router
 from app.appointment.router import router as appointment_router
 from app.employee.router import router as employee_router
+from app.pages.router import router as page_router
+from app.images.router import router as image_router
 
 
 @asynccontextmanager
@@ -35,6 +37,10 @@ app.include_router(pet_router)
 app.include_router(service_router)
 app.include_router(appointment_router)
 app.include_router(employee_router)
+app.include_router(page_router)
+app.include_router(image_router)
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 authentication_backend = AdminAuth(secret_key=settings.SECRET_KEY)
 admin = Admin(app, engine, authentication_backend=authentication_backend)

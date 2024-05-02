@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi_cache.decorator import cache
 
-from app.auth.dependencies import get_current_user_admin
+from app.auth.dependencies import get_current_user_admin, get_current_user
 from app.exceptions import IncorrectIDException
 from app.services.dao import ServicesDAO
 from app.services.schemas import SServicesAdd, SServicesGet
@@ -26,7 +26,7 @@ async def del_services(service_id: int, user=Depends(get_current_user_admin)):
 @router.get("/get")
 @cache(expire=10)
 async def get_services(
-    user=Depends(get_current_user_admin),
+    user=Depends(get_current_user),
 ) -> list[dict[str, SServicesGet]]:
     return await ServicesDAO.fetch_all()
 

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Услуги</title>
+</head>
+<body>
+<div>
+    {% for service in services %}
+    <div class="flex justify-left flex-row  border-4 rounded-md size-fit md:size-auto">
+        <img class="m-2 rounded-r-lg"
+             src="{{ url_for('static', path='services/resized_500_250_' + service.image_id|string + '.webp') }}"
+             alt='фото услуги'
+             width="300px">
+        <div class="relative flex-col">
+            <div class='align-top' style="margin-left: 8px">
+                <h1 class="font-bold text-4xl">{{service.title}}</h1>
+                <h4 class="font-semibold text-xl">{{service.description}}</h4>
+            </div>
+            <div style="margin-left: 8px">
+                <span class="absolute bottom-4 left-10px">
+                <h4 class="font-medium text-lg">Для маленьких от {{service.price_small}}р</h4>
+                <h4 class="font-medium text-lg">Для больших от {{service.price_big}}р</h4>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+</body>
+</html>

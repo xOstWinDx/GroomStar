@@ -6,6 +6,7 @@ class SServicesAdd(BaseModel):
     description: str | None = None
     price_small: int | None = None
     price_big: int | None = None
+    image_id: int | None = None
 
 
 class SServicesGet(SServicesAdd):

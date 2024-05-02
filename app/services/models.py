@@ -15,6 +15,7 @@ class Service(Base):
     description: Mapped[str] = mapped_column(nullable=False)
     price_small: Mapped[int] = mapped_column(nullable=False)
     price_big: Mapped[int] = mapped_column(nullable=False)
+    image_id: Mapped[int] = mapped_column(nullable=False)
 
     def __repr__(self):
         return f"#{self.id} {self.title}"

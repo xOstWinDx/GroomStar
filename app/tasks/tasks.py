@@ -1,7 +1,9 @@
 import asyncio
 import datetime
 import smtplib
+from pathlib import Path
 
+from PIL import Image
 from celery import Celery
 from celery.schedules import crontab
 
@@ -80,3 +82,11 @@ async def email_notify(hour: int):
         server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
         for email in emails:
             server.send_message(email)
+
+
+@celery.task
+def resize_photo(path: str):
+    img_path = Path(path)
+    im = Image.open(img_path)
+    im_resized_500_250 = im.resize((500, 250))
+    im_resized_500_250.save(f"app/static/services/resized_500_250_{img_path.name}")
