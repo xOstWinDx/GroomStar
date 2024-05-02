@@ -6,11 +6,12 @@
 
 
 ## Технологические решения
+  - Основной фреймворк FastAPI
   - Регистрация
   - refresh и access Токены
   - Private и Public key
   - Авторизация
-  - Админ панель
+  - Админ панель SQLAdmin
   - Сбор метрик Prometheus, визуализирование в Grafana
   - Кеширование Redis
   - Миграции Alembic
@@ -18,7 +19,8 @@
   - Логирование Sentry
   - Странички Jinja2
   - Фоновые задачи Celery
-  - Уведомления на почту
+  - Уведомления на почту Celery Beat
+  - Мониторинг задач Flower
   - m2m связи
   - Docker
   - Black list JWT
