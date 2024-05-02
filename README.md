@@ -1,5 +1,5 @@
 <p align="center">
-      <img src="https://i.ibb.co/Jr6VxWQ/draw-SQL-image-export-2024-05-02.png", alt='data_base diagram' width="500" hight="1500">
+      <img src="https://i.ibb.co/Jr6VxWQ/draw-SQL-image-export-2024-05-02.png", alt='data_base diagram' hight="1500">
 </p>
 
 
