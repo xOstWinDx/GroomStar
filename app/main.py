@@ -4,6 +4,7 @@ import sentry_sdk
 from fastapi import FastAPI, Query
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from prometheus_fastapi_instrumentator import Instrumentator
 from redis import asyncio as aioredis
 from sqladmin import Admin
 from starlette.staticfiles import StaticFiles
@@ -24,10 +25,19 @@ from app.images.router import router as image_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    instrumentator.expose(app)
     # Load the ML model
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+instrumentator = Instrumentator(
+    should_group_status_codes=False,
+    excluded_handlers=[".*admin.*", "/metrics"],
+).instrument(app)
 
 
 sentry_sdk.init(
@@ -35,8 +45,6 @@ sentry_sdk.init(
     enable_tracing=True,
 )
 
-
-app = FastAPI(lifespan=lifespan)
 
 app.include_router(auth_router)
 app.include_router(user_router)
