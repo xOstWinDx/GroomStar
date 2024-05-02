@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 
+import sentry_sdk
 from fastapi import FastAPI, Query
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
@@ -29,6 +30,12 @@ async def lifespan(app: FastAPI):
     yield
 
 
+sentry_sdk.init(
+    dsn=settings.SENTRY,
+    enable_tracing=True,
+)
+
+
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(auth_router)
@@ -50,3 +57,8 @@ admin.add_view(UserAdmin)
 admin.add_view(AppointmentAdmin)
 admin.add_view(PetAdmin)
 admin.add_view(EmployeeAdmin)
+
+
+@app.get("/sentry-debug")
+async def trigger_error():
+    division_by_zero = 1 / 0
