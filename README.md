@@ -1,9 +1,5 @@
-
-
-
 <div>
-
-  <img src="https://i.ibb.co/Jr6VxWQ/draw-SQL-image-export-2024-05-02.png", alt='data_base diagram' width="1500px" hight="200px">
+        <img src="https://i.ibb.co/9ZMdxfr/dxgh-Mkxhb-B4.jpg", alt='data_base diagram'>
   
 </div>
 
