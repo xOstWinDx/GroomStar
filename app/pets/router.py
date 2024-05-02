@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_cache.decorator import cache
 from starlette import status
 
 from app.auth.dependencies import get_current_user
@@ -18,6 +19,7 @@ async def add_pet(pet: SPetAdd, user: User = Depends(get_current_user)):
 
 
 @router.get("/get", status_code=status.HTTP_200_OK)
+@cache(expire=2)
 async def get_pet(user: User = Depends(get_current_user)) -> list[dict[str, SPetGet]]:
     pets = await PetDAO.fetch_all(user_id=user.id)
     return pets

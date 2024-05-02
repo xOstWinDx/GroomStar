@@ -6,10 +6,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 from app.appointment.models.appointment_detail import AppointmentDetail
+from app.employee.models import Employee
 
 if TYPE_CHECKING:
     from app.users.models import User
-    from app.employee.models import Employee
 
 
 class Appointment(Base):
@@ -29,7 +29,7 @@ class Appointment(Base):
 
     employee: Mapped["Employee"] = relationship(back_populates="appointments")
     customer: Mapped["User"] = relationship(
-        back_populates="appointments", foreign_keys=customer_id
+        back_populates="appointments", foreign_keys=customer_id, lazy="selectin"
     )
 
     def __repr__(self):

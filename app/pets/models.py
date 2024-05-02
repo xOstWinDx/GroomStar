@@ -5,9 +5,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 
 from app.database import Base
-
-if TYPE_CHECKING:
-    from app.users.models import User
+from app.users.models import User
 
 
 class Pet(Base):

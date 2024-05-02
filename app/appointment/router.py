@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi_cache.decorator import cache
 from starlette.responses import Response
 
 from app.appointment.appointment_validate import (
@@ -14,10 +15,11 @@ from app.appointment.dao import AppointmentDAO
 from app.appointment.schemas import SAppointment
 from app.auth.dependencies import get_current_user
 
+
 router = APIRouter(prefix="/appointment", tags=["appointment"])
 
 
-@router.post("/add")
+@router.post("/add", status_code=201)
 async def add_appointment(
     response: Response, appo_data: SAppointment, user=Depends(get_current_user)
 ):
@@ -28,5 +30,6 @@ async def add_appointment(
 
 
 @router.get("/get")
+@cache(expire=3)
 async def get_appointment(user=Depends(get_current_user)):
     return await AppointmentDAO.fetch_all(customer_id=user.id)

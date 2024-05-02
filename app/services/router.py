@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi_cache.decorator import cache
 
 from app.auth.dependencies import get_current_user_admin
 from app.exceptions import IncorrectIDException
@@ -8,7 +9,7 @@ from app.services.schemas import SServicesAdd, SServicesGet
 router = APIRouter(tags=["Services"], prefix="/services")
 
 
-@router.post("/add")
+@router.post("/add", status_code=201)
 async def add_services(
     service_data: SServicesAdd, user=Depends(get_current_user_admin)
 ):
@@ -23,6 +24,7 @@ async def del_services(service_id: int, user=Depends(get_current_user_admin)):
 
 
 @router.get("/get")
+@cache(expire=10)
 async def get_services(
     user=Depends(get_current_user_admin),
 ) -> list[dict[str, SServicesGet]]:

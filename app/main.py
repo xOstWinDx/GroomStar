@@ -1,7 +1,11 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Query
-from securecookies import SecureCookiesMiddleware
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
 from sqladmin import Admin
-from starlette.middleware import Middleware
+
 
 from app.admin.auth import AdminAuth
 from app.admin.views import UserAdmin, AppointmentAdmin, PetAdmin, EmployeeAdmin
@@ -15,7 +19,15 @@ from app.appointment.router import router as appointment_router
 from app.employee.router import router as employee_router
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load the ML model
+    redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}")
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(auth_router)
 app.include_router(user_router)

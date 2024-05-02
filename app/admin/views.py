@@ -49,7 +49,7 @@ class EmployeeAdmin(ModelView, model=Employee):
         Employee.full_name,
         Employee.appointments,
     ]
-    can_delete = False
+    can_delete = True
     name = "Сотрудник"
     name_plural = "Сотрудники"
     icon = "fa-solid fa-address-card"

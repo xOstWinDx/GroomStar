@@ -4,9 +4,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import func, DateTime
 
-from app.appointment.models.appointment import Appointment
+
 from app.database import Base
-from app.pets.models import Pet
+
+
+if TYPE_CHECKING:
+    from app.appointment.models.appointment import Appointment
+    from app.pets.models import Pet
 
 
 class User(Base):
@@ -35,7 +39,7 @@ class User(Base):
 
     pets: Mapped[list["Pet"]] = relationship(back_populates="user", lazy="selectin")
     appointments: Mapped[list["Appointment"]] = relationship(
-        back_populates="customer", foreign_keys=Appointment.customer_id
+        back_populates="customer", foreign_keys="appointments.c.customer_id"
     )
 
     def __repr__(self):

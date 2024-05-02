@@ -5,12 +5,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 from app.database import Base
-
+from app.services.models import Service
+from app.pets.models import Pet
 
 if TYPE_CHECKING:
     from app.appointment.models.appointment import Appointment
-    from app.services.models import Service
-    from app.pets.models import Pet
 
 
 class AppointmentDetail(Base):

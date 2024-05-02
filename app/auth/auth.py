@@ -46,15 +46,15 @@ async def set_pair_token(
             key="access_token",
             value=access_token,
             max_age=900,
-            secure=True,
             httponly=True,
+            secure=True,
         )
         response.set_cookie(
             key="refresh_token",
             value=refresh_token,
             max_age=604_800,
-            secure=True,
             httponly=True,
+            secure=True,
         )
         return access_token, refresh_token
 

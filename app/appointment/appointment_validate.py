@@ -53,7 +53,7 @@ async def validate_date(appo_data: SAppointment, response):
     )
     if appo_data.date in date_list:
         raise HTTPException(
-            status_code=400,
+            status_code=409,
             detail=f"Это время уже занято",
             headers=response.headers,
         )
