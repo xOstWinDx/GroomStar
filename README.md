@@ -1,5 +1,5 @@
 <p align="center">
-      <img src="[https://ibb.co/7rMPgx4](https://ibb.co/7rMPgx4)", alt='data_base diagram' width="726">
+      <img src="https://ibb.co/7rMPgx4", alt='data_base diagram' width="726">
 </p>
 
 
